@@ -1,0 +1,10 @@
+@import '../../globals.scss';
+
+.panelWrapper {
+  min-height: 100vh;
+}
+
+.loginForm {
+  // @extend .flex-center-all;
+  flex-direction: column;
+}

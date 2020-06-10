@@ -1,0 +1,28 @@
+@import '../../../globals.scss';
+
+.arrowCard {
+    @extend .flex-center-all;
+    border: 4px solid white;
+    font-size: 2rem;
+    @media (min-width: 768px) {
+        padding: 1rem;
+    }
+    padding: 0.5rem;
+    cursor: pointer;
+    &:hover {
+        background-color: white;
+        color: $blue;
+    }
+}
+
+.displayed {
+    @extend .flex-center-all;
+    font-size: 8rem !important;
+    height: 100%;
+}
+
+.arrowDeck {
+    @extend .flex-center-all;
+    width: 100%;
+    margin-bottom: 7rem;
+}

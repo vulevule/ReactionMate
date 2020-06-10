@@ -1,0 +1,27 @@
+@import '../../globals.scss';
+
+.dashboard {
+    display: flex;
+}
+
+.cardContainer {
+    height: 16rem;
+    cursor: pointer;
+    &:hover {
+        box-shadow: 0 .5rem 1rem rgba(0,0,0,.15);
+    }
+}
+
+.imgContainer {
+    font-size: 3.5rem;
+}
+
+.invertedBg {
+    background-color: $white;
+    color: black
+}
+
+.page {
+    height: 100vh;
+    text-align: center
+}

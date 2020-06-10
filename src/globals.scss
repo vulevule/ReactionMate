@@ -1,0 +1,178 @@
+
+@import "node_modules/bootstrap/scss/bootstrap";
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+$xs: map-get($map: $grid-breakpoints, $key: 'xs');
+$sm: map-get($map: $grid-breakpoints, $key: 'sm');
+$md: map-get($map: $grid-breakpoints, $key: 'md');
+$lg: map-get($map: $grid-breakpoints, $key: 'lg');
+$xl: map-get($map: $grid-breakpoints, $key: 'xl');
+
+@each $key, $value in $grid-breakpoints {
+  .display-from-#{$key} {
+    @media (min-width: $value) {
+      display: block;
+    }
+    display: none;
+  }
+  .hide-from-#{$key} {
+    @media (min-width: $value) {
+      display: none;
+    }
+  }
+  .display-to-#{$key} {
+    @media (max-width: $value) {
+      display: block;
+    }
+    display: none;
+  }
+  .hide-to-#{$key} {
+    @media (max-width: $value) {
+      display: none;
+    }
+  }
+  .flex-row-#{$key} {
+    @extend .flex-center-all;
+    @media (min-width: $value) {
+      flex-flow: row;
+    }
+    flex-flow: column;
+  }
+  .flex-column-#{$key} {
+    @extend .flex-center-all;
+    @media (min-width: $value) {
+      flex-flow: column;
+    }
+    flex-flow: row;
+  }
+}
+
+.flex-row-between {
+  display: flex;
+  justify-content: space-between;
+  flex-flow: row;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+h1 {
+	@media (min-width: 770px) {
+		font-size: 3.5rem !important;
+	}
+
+  @media (min-width: 450px) {
+		font-size: 2.5rem !important;
+	}
+  
+	font-size: 2rem !important;
+	font-weight: 300 !important;
+	// line-height: 1 !important;
+}
+
+h2 {
+	font-size: 1rem !important;
+  font-weight: 300 !important;
+}
+
+@each $name, $color in $colors {
+  .bg-#{$name} { background-color: $color !important; }
+  .border-#{$name} { 
+    border: 1px solid $color !important; 
+    // &:hover {
+    //   border-top: 5px solid $color !important;
+    //   border-bottom: 5px solid $color !important;
+    // }
+  }
+  .text-#{$name} {
+    color: $color !important;
+  }
+}
+
+.flex-center-all {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.flex-center-column-fullheight {
+  @extend .flex-center-all;
+  flex-flow: column;
+  height: 100%
+}
+
+.hero {
+  @media screen and (max-device-width: 1024px) and (orientation:portrait) {
+      height: 100vh;
+  }
+  @media screen and (orientation:landscape) and (max-device-height: 450px) {
+      height: 100vh;
+  }
+  @extend .flex-center-all;
+  height: 60vh;
+  flex-flow: column;
+  color: white;
+  background-color: $blue;
+  text-align: center;
+}
+
+.hero-exp {
+  @extend .hero;
+  height: 100vh;
+  padding-bottom: 35px;
+}
+
+.hero-50 {
+@extend .hero;
+height: 50vh
+}
+
+.hero-auto {
+@extend .hero;
+height: auto
+}
+
+.resp-width {
+  @media (min-width: 480px) {
+  width: 50%
+  }
+  @media (min-width: $md) {
+  width: 40%
+  }
+  @media (min-width: $lg) {
+  width: 25%
+}
+  width: 75%
+}
+
+.resp-width-wider {
+  // @media (min-width: 480px) {
+  // width: 90%
+  // }
+  @media (min-width: $md) {
+  width: 90%
+  }
+  @media (min-width: $lg) {
+  width: 70%
+}
+  width: 100%
+}
+
+.hover-opacity {
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+.letterSpaced {
+  letter-spacing: 0.1rem;
+}

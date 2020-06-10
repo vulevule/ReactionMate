@@ -1,0 +1,13 @@
+@import '../../../globals.scss';
+
+.displayed {
+    @extend .flex-center-all;
+    flex-flow: column;
+    font-size: 8rem !important;
+    height: 100%;
+}
+
+.stimulusContainer {
+    @extend .flex-center-all;
+    flex-flow: row
+}

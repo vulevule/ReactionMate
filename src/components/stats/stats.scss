@@ -1,0 +1,20 @@
+@import './../../globals.scss';
+
+.averageScoreText {
+    font-size: 4rem;
+    line-height: 2.5rem;
+}
+
+.dateText {
+    color: #ccc
+}
+
+.msg {
+    font-weight: 500;
+}
+
+.chartSwitches {
+    margin-left: 5%;
+    display: flex;
+    flex-flow: row;
+}

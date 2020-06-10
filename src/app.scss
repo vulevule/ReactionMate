@@ -1,0 +1,41 @@
+.headerButton {
+    cursor: pointer;
+    padding: 1rem;
+    text-transform: uppercase;
+    &:hover {
+        background: #f2f2f2;;
+    }
+}
+
+.header {
+    @media (max-width: 350px) {
+		font-size: 0.8rem !important;
+    }
+    
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1;
+    background-color: white;
+}
+
+.headerContent {
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+}
+
+.iconLink {
+    color: white;
+}
+
+.active {
+    background: rgba($color: #333, $alpha: 0.2);
+}
+
+.content {
+    margin-top: 4rem;
+    min-height: 100vh;
+}

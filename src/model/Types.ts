@@ -1,0 +1,1 @@
+export type ReactionTimeType = 'simple' | 'recognition' | 'choice' | 'discrimination';
