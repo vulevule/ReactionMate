@@ -4,7 +4,7 @@ import { Admin } from '../../../model/User';
 import { getAllConfigs, updateConfig } from '../../../services';
 import { Config } from './../../../model/Config';
 import { useStateWithStorage } from './../../../utils/inits';
-import { Spinner } from '../../utilities/Loaders';
+import { Spinner, PageSpinner } from '../../utilities/Loaders';
 import { Form } from './../../utilities/Forms';
 
 export const GeneralConfigPage: React.FC = () => {
@@ -39,7 +39,7 @@ export const GeneralConfigPage: React.FC = () => {
   if (loading) {
     return (
       <div className="w-100 vh-100 flex-center-all">
-        <Spinner />
+        <PageSpinner />
       </div>
     )
   } else {

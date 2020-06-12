@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
+import { GiTimeBomb } from 'react-icons/gi';
+import { MdErrorOutline, MdTimelapse } from 'react-icons/md';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -8,14 +10,12 @@ import { getExperiment, saveExperimentResult } from '../../services/experimentSe
 import { ActivityFeedCard } from '../stats/Stats';
 import { CustomDataForm, Form } from '../utilities/Forms';
 import { Experiment, TestConfiguration } from './../../model/Experiment';
+import { PageSpinner } from './../utilities/Loaders';
 import { ExpChoice } from './ExpChoice';
 import { ExpDiscrimination } from './ExpDiscrimination';
 import './ExperimentPage.scss';
 import { ExpRecognition } from './ExpRecognition';
 import { ExpSimple } from './ExpSimple';
-import { GiTimeBomb } from 'react-icons/gi';
-import { Spinner } from './../utilities/Loaders';
-import { MdErrorOutline, MdTimelapse } from 'react-icons/md';
 
 const testConfigMapper = (
     { type, tries }: TestConfiguration, lastTest: boolean, onSaveTestScore: (data: SpecificScore) => void
@@ -95,7 +95,7 @@ export const ExperimentPage: React.FC = () => {
         <div className="experiment">
             {!experiment && !errorMessage &&
                 <div className="vh-100 flex-center-all">
-                    <Spinner />
+                    <PageSpinner />
                 </div>
             }
             {experiment && <ExperimentInstance experiment={experiment} />}
