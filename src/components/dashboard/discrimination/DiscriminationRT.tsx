@@ -5,17 +5,17 @@ import './discrimination.scss';
 
 export const DiscriminationRT: React.FC = () => {
 
-    return (
-        <div className='page'>
-            <Playground
-                type='discrimination'
-                startScreen={<DiscriminationStartScreen />}
-                stimulusScreen={<DiscriminationStimulusScreen />}
-                stimulusKeys={Object.keys(keyboardMap)}
-            />
-            <div className='pt-3'>
+	return (
+		<div className='page'>
+			<Playground
+				type='discrimination'
+				startScreen={<DiscriminationStartScreen />}
+				stimulusScreen={<DiscriminationStimulusScreen />}
+				stimulusKeys={Object.keys(keyboardMap)}
+			/>
+			<div className='pt-3'>
 
-            </div>
-        </div>
-    )
+			</div>
+		</div>
+	)
 }

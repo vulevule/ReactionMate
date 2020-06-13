@@ -1,26 +1,26 @@
-import { ReactionTimeType } from "./Types";
+import { ReactionTimeType } from './Types';
 
 interface AbstractUser {
-    token?: string;
-    username: string;
-    name: string;
-    email: string;
-    created: Date;
+	token?: string;
+	username: string;
+	name: string;
+	email: string;
+	created: Date;
 }
 
 export interface User extends AbstractUser {
-    scores: Scores;
+	scores: Scores;
 }
 
 export type Admin = AbstractUser;
 
 export interface SpecificScore {
-    type: ReactionTimeType;
-    date: Date;
-    tries?: number;
-    average: number;
-    best: number;
-    success: number;
+	type: ReactionTimeType;
+	date: Date;
+	tries?: number;
+	average: number;
+	best: number;
+	success: number;
 }
 
 export type SpecificScores = SpecificScore[];

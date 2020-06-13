@@ -11,61 +11,61 @@ import './stats.scss';
 
 export const Stats: React.FC = () => {
 
-    const { path, url } = useRouteMatch();
-    const tabs: ReactionTimeType[] = ['simple', 'recognition', 'choice', 'discrimination']
-    const [selected, setSelected] = useState(tabs.find(e => window.location.pathname.endsWith(e)));
-    const [lastSelected, setLastSelected] = useState('simple')
-    const [tabsFirstSelect, setTabsFirstSelect] = useState({
-        simple: true,
-        recognition: true,
-        choice: true,
-        discrimination: true
-    })
+	const { path, url } = useRouteMatch();
+	const tabs: ReactionTimeType[] = ['simple', 'recognition', 'choice', 'discrimination']
+	const [selected, setSelected] = useState(tabs.find(e => window.location.pathname.endsWith(e)));
+	const [lastSelected, setLastSelected] = useState('simple')
+	const [tabsFirstSelect, setTabsFirstSelect] = useState({
+		simple: true,
+		recognition: true,
+		choice: true,
+		discrimination: true
+	})
 
-    const selectTab = (tab: ReactionTimeType) => {
-        setSelected(tab);
-        setTabsFirstSelect(old => ({ ...old, [lastSelected]: false }));
-        setLastSelected(tab);
-    }
+	const selectTab = (tab: ReactionTimeType) => {
+		setSelected(tab);
+		setTabsFirstSelect(old => ({ ...old, [lastSelected]: false }));
+		setLastSelected(tab);
+	}
 
-    return (
-        <div className='h-100'>
-            <div className='mt-1'>
-                <ul className="nav nav-tabs nav-justified">
-                    {tabs.map((tab, i) =>
-                        <li key={i} className="nav-item">
-                            <Link
-                                className={"nav-link text-capitalize " + (selected === tab ? 'active' : '')}
-                                onClick={() => selectTab(tab)}
-                                to={`${url}/${tab}`}
-                            >
-                                {tab}
-                            </Link>
-                        </li>
-                    )}
+	return (
+		<div className='h-100'>
+			<div className='mt-1'>
+				<ul className="nav nav-tabs nav-justified">
+					{tabs.map((tab, i) =>
+						<li key={i} className="nav-item">
+							<Link
+								className={'nav-link text-capitalize ' + (selected === tab ? 'active' : '')}
+								onClick={() => selectTab(tab)}
+								to={`${url}/${tab}`}
+							>
+								{tab}
+							</Link>
+						</li>
+					)}
 
-                </ul>
-            </div>
+				</ul>
+			</div>
 
-            <Switch>
-                <Route exact path={path}>
-                    <ReactionTypeStats type='simple' firstSelect={tabsFirstSelect.simple} />
-                </Route>
-                <Route path={`${path}/simple`}>
-                    <ReactionTypeStats type='simple' firstSelect={tabsFirstSelect.simple} />
-                </Route>
-                <Route path={`${path}/recognition`}>
-                    <ReactionTypeStats type='recognition' firstSelect={tabsFirstSelect.recognition} />
-                </Route>
-                <Route path={`${path}/choice`}>
-                    <ReactionTypeStats type='choice' firstSelect={tabsFirstSelect.choice} />
-                </Route>
-                <Route path={`${path}/discrimination`}>
-                    <ReactionTypeStats type='discrimination' firstSelect={tabsFirstSelect.discrimination} />
-                </Route>
-            </Switch>
-        </div>
-    )
+			<Switch>
+				<Route exact path={path}>
+					<ReactionTypeStats type='simple' firstSelect={tabsFirstSelect.simple} />
+				</Route>
+				<Route path={`${path}/simple`}>
+					<ReactionTypeStats type='simple' firstSelect={tabsFirstSelect.simple} />
+				</Route>
+				<Route path={`${path}/recognition`}>
+					<ReactionTypeStats type='recognition' firstSelect={tabsFirstSelect.recognition} />
+				</Route>
+				<Route path={`${path}/choice`}>
+					<ReactionTypeStats type='choice' firstSelect={tabsFirstSelect.choice} />
+				</Route>
+				<Route path={`${path}/discrimination`}>
+					<ReactionTypeStats type='discrimination' firstSelect={tabsFirstSelect.discrimination} />
+				</Route>
+			</Switch>
+		</div>
+	)
 }
 
 interface ReactionTimeStatsProps {
@@ -82,47 +82,47 @@ interface SpecificScoreProps extends ReactionTimeStatsProps {
 
 const ReactionTypeStats: React.FC<ReactionTimeStatsProps> = ({ type, showAverage = true, showBest = true, showSuccess = true, firstSelect }) => {
 
-    const [user] = useStateWithStorage<User>('user');
-    const averages = user.scores[type].map(s => s.average);
-    const bests = user.scores[type].map(s => s.best);
-    const successes = user.scores[type].map(s => s.success || 0);
+	const [user] = useStateWithStorage<User>('user');
+	const averages = user.scores[type].map(s => s.average);
+	const bests = user.scores[type].map(s => s.best);
+	const successes = user.scores[type].map(s => s.success || 0);
 
-    const averageScore = averages?.length ? average(averages) : 0;
-    const bestScore = bests?.length ? Math.min(...bests) : 0;
-    const successScore = successes?.length ? average(successes) : 0;
+	const averageScore = averages?.length ? average(averages) : 0;
+	const bestScore = bests?.length ? Math.min(...bests) : 0;
+	const successScore = successes?.length ? average(successes) : 0;
 
-    return (
-        <div className='mt-3 text-center'>
-            {!averages.length ?
-                <div className='mt-5'>
-                    <h4>There are still no results in this category</h4>
-                    <h6><Link to={'/' + type}>Take the test</Link>, and make some great stats!</h6>
-                </div>
-                :
-                <>
-                    <div className='card-deck mb-3'>
-                        {showAverage && <AverageScoreCard score={averageScore} firstSelect={firstSelect} />}
-                        {showBest && <BestScoreCard score={bestScore} firstSelect={firstSelect} />}
-                        {showSuccess && <SuccessScoreCard score={successScore} firstSelect={firstSelect} />}
-                    </div>
-                    <p className='msg'>You can do it better, right? <Link to={'/' + type}>Take the test</Link>, and improve your results!</p>
-                    <RecentResultsCard
-                        type={type}
-                        showAverage={showAverage}
-                        showBest={showBest}
-                        showSuccess={showSuccess}
-                        scores={user.scores[type]}
-                        firstSelect={firstSelect}
-                    />
-                    <ActivityFeedCard
-                        showAverage={showAverage}
-                        showBest={showBest}
-                        showSuccess={showSuccess}
-                        scores={user.scores[type]}
-                    />
-                </>}
-        </div>
-    )
+	return (
+		<div className='mt-3 text-center'>
+			{!averages.length ?
+				<div className='mt-5'>
+					<h4>There are still no results in this category</h4>
+					<h6><Link to={'/' + type}>Take the test</Link>, and make some great stats!</h6>
+				</div>
+				:
+				<>
+					<div className='card-deck mb-3'>
+						{showAverage && <AverageScoreCard score={averageScore} firstSelect={firstSelect} />}
+						{showBest && <BestScoreCard score={bestScore} firstSelect={firstSelect} />}
+						{showSuccess && <SuccessScoreCard score={successScore} firstSelect={firstSelect} />}
+					</div>
+					<p className='msg'>You can do it better, right? <Link to={'/' + type}>Take the test</Link>, and improve your results!</p>
+					<RecentResultsCard
+						type={type}
+						showAverage={showAverage}
+						showBest={showBest}
+						showSuccess={showSuccess}
+						scores={user.scores[type]}
+						firstSelect={firstSelect}
+					/>
+					<ActivityFeedCard
+						showAverage={showAverage}
+						showBest={showBest}
+						showSuccess={showSuccess}
+						scores={user.scores[type]}
+					/>
+				</>}
+		</div>
+	)
 }
 
 interface ActivityFeedCardProps extends Partial<SpecificScoreProps> {
@@ -133,100 +133,100 @@ interface ActivityFeedCardProps extends Partial<SpecificScoreProps> {
 
 export const ActivityFeedCard: React.FC<ActivityFeedCardProps> = ({ title, scores, showAverage, showBest, showSuccess, showDate = true, showTries }) => {
 
-    return (
-        <div className='w-100 card shadow-sm mb-3'>
-            <div className='card-body text-center'>
-                <h5 className='card-title'>{title || 'Activity feed'}</h5>
-                <div className='card-text'>
-                    {scores?.length ?
-                        <table className='w-100'>
-                            <thead><tr>
-                                <th>Test</th>
-                                {showTries && <th>Tries</th>}
-                                {showDate && <th>Date</th>}
-                                {showAverage && <th>Average</th>}
-                                {showBest && <th>Best</th>}
-                                {showSuccess && <th>Success</th>}
-                            </tr></thead>
-                            <tbody>
-                                {scores?.map((s, i) =>
-                                    <tr key={i}>
-                                        <td className='text-capitalize'>{s.type}</td>
-                                        {showTries && <td>{s.tries}</td>}
-                                        {showDate && <td >{dateDiffNow(s.date)} ago <span className='dateText'>| {formatDate(s.date)}</span></td>}
-                                        {showAverage && <td>{s.average}ms</td>}
-                                        {showBest && <td>{s.best}ms</td>}
-                                        {showSuccess && <td>{s.success}%</td>}
-                                    </tr>
+	return (
+		<div className='w-100 card shadow-sm mb-3'>
+			<div className='card-body text-center'>
+				<h5 className='card-title'>{title || 'Activity feed'}</h5>
+				<div className='card-text'>
+					{scores?.length ?
+						<table className='w-100'>
+							<thead><tr>
+								<th>Test</th>
+								{showTries && <th>Tries</th>}
+								{showDate && <th>Date</th>}
+								{showAverage && <th>Average</th>}
+								{showBest && <th>Best</th>}
+								{showSuccess && <th>Success</th>}
+							</tr></thead>
+							<tbody>
+								{scores?.map((s, i) =>
+									<tr key={i}>
+										<td className='text-capitalize'>{s.type}</td>
+										{showTries && <td>{s.tries}</td>}
+										{showDate && <td >{dateDiffNow(s.date)} ago <span className='dateText'>| {formatDate(s.date)}</span></td>}
+										{showAverage && <td>{s.average}ms</td>}
+										{showBest && <td>{s.best}ms</td>}
+										{showSuccess && <td>{s.success}%</td>}
+									</tr>
                                 )}
-                            </tbody>
-                        </table>
+							</tbody>
+						</table>
 
-                        : <span className='averageScoreText'>N/A</span>}
-                </div>
-            </div>
-        </div>
-    )
+						: <span className='averageScoreText'>N/A</span>}
+				</div>
+			</div>
+		</div>
+	)
 }
 
 const RecentResultsCard: React.FC<SpecificScoreProps> = ({ scores, showAverage, showBest, firstSelect }) => {
-    const [showAverageOnChart, setShowAverageOnChart] = useState(showAverage);
-    const [showBestOnChart, setShowBestOnChart] = useState(showBest)
+	const [showAverageOnChart, setShowAverageOnChart] = useState(showAverage);
+	const [showBestOnChart, setShowBestOnChart] = useState(showBest)
 
-    const data = scores.map(s => {
-        const d = new Date(s.date);
-        const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
-        const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
-        return { ...s, date: `${da}-${mo}` }
-    });
+	const data = scores.map(s => {
+		const d = new Date(s.date);
+		const mo = new Intl.DateTimeFormat('en', { month: 'short' }).format(d);
+		const da = new Intl.DateTimeFormat('en', { day: '2-digit' }).format(d);
+		return { ...s, date: `${da}-${mo}` }
+	});
 
-    return (
-        <div className='card shadow-sm mb-3'>
-            <div className='card-body'>
-                <h5 className='card-title'>Recent results</h5>
-                <div className='card-text'>
-                    <ResponsiveContainer width='95%' height={300}>
-                        <LineChart data={data}>
-                            {showAverageOnChart &&
+	return (
+		<div className='card shadow-sm mb-3'>
+			<div className='card-body'>
+				<h5 className='card-title'>Recent results</h5>
+				<div className='card-text'>
+					<ResponsiveContainer width='95%' height={300}>
+						<LineChart data={data}>
+							{showAverageOnChart &&
                                 <Line type="monotone" dataKey="average" stroke="#8884d8" isAnimationActive={firstSelect} />
-                            }
-                            {showBestOnChart &&
+							}
+							{showBestOnChart &&
                                 <Line type="monotone" dataKey="best" stroke="#82ca9d" isAnimationActive={firstSelect} />
-                            }
-                            <CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
-                            <XAxis dataKey="date" padding={{ left: 30, right: 30 }} />
-                            <YAxis />
-                            <Tooltip />
-                            <Legend />
-                            {data.length > 5 && <Brush />}
-                        </LineChart>
-                    </ResponsiveContainer>
-                    <div className='chartSwitches'>
-                        {showAverage && <div className="custom-control custom-switch m-1">
-                            <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="averageSwitch"
-                                checked={showAverageOnChart}
-                                onChange={() => setShowAverageOnChart(old => !old)}
-                            />
-                            <label className="custom-control-label" htmlFor="averageSwitch">Average</label>
-                        </div>}
-                        {showBest && <div className="custom-control custom-switch m-1">
-                            <input
-                                type="checkbox"
-                                className="custom-control-input"
-                                id="bestSwitch"
-                                checked={showBestOnChart}
-                                onChange={() => setShowBestOnChart(old => !old)}
-                            />
-                            <label className="custom-control-label" htmlFor="bestSwitch">Best</label>
-                        </div>}
-                    </div>
-                </div>
-            </div>
-        </div>
-    )
+							}
+							<CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
+							<XAxis dataKey="date" padding={{ left: 30, right: 30 }} />
+							<YAxis />
+							<Tooltip />
+							<Legend />
+							{data.length > 5 && <Brush />}
+						</LineChart>
+					</ResponsiveContainer>
+					<div className='chartSwitches'>
+						{showAverage && <div className="custom-control custom-switch m-1">
+							<input
+								type="checkbox"
+								className="custom-control-input"
+								id="averageSwitch"
+								checked={showAverageOnChart}
+								onChange={() => setShowAverageOnChart(old => !old)}
+							/>
+							<label className="custom-control-label" htmlFor="averageSwitch">Average</label>
+						</div>}
+						{showBest && <div className="custom-control custom-switch m-1">
+							<input
+								type="checkbox"
+								className="custom-control-input"
+								id="bestSwitch"
+								checked={showBestOnChart}
+								onChange={() => setShowBestOnChart(old => !old)}
+							/>
+							<label className="custom-control-label" htmlFor="bestSwitch">Best</label>
+						</div>}
+					</div>
+				</div>
+			</div>
+		</div>
+	)
 }
 
 interface ScoreProp {
@@ -240,30 +240,30 @@ interface SingleScoreProps extends ScoreProp {
 }
 
 const AverageScoreCard: React.FC<ScoreProp> = props => {
-    return <SingleScoreCard title='Average score' {...props} />
+	return <SingleScoreCard title='Average score' {...props} />
 }
 
 const BestScoreCard: React.FC<ScoreProp> = props => {
-    return <SingleScoreCard title='Best score' {...props} />
+	return <SingleScoreCard title='Best score' {...props} />
 }
 
 const SuccessScoreCard: React.FC<ScoreProp> = props => {
-    return <SingleScoreCard title='Success score' {...props} unit='%' />
+	return <SingleScoreCard title='Success score' {...props} unit='%' />
 }
 
 const SingleScoreCard: React.FC<SingleScoreProps> = ({ score, title, firstSelect, unit = 'ms' }) => {
-    const decimals = countDecimals(score);
+	const decimals = countDecimals(score);
 
-    return (
-        <div className='card shadow-sm'>
-            <div className='card-body text-center'>
-                <h5 className='card-title'>{title}</h5>
-                <span className='card-text averageScoreText'>
-                    {/* {firstSelect ? <CountUp end={score} delay={1} decimals={decimals} redraw /> : score} */}
-                    <CountUp start={firstSelect ? 0 : score} end={score} delay={1} decimals={decimals} />
-                </span>
-                {!!score && <cite>{unit}</cite>}
-            </div>
-        </div>
-    )
+	return (
+		<div className='card shadow-sm'>
+			<div className='card-body text-center'>
+				<h5 className='card-title'>{title}</h5>
+				<span className='card-text averageScoreText'>
+					{/* {firstSelect ? <CountUp end={score} delay={1} decimals={decimals} redraw /> : score} */}
+					<CountUp start={firstSelect ? 0 : score} end={score} delay={1} decimals={decimals} />
+				</span>
+				{!!score && <cite>{unit}</cite>}
+			</div>
+		</div>
+	)
 }

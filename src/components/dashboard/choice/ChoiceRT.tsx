@@ -7,18 +7,18 @@ import { arrowsMap, ChoiceStartScreen, ChoiceStimulusScreen, ChoiceWaitScreen } 
 
 export const ChoiceRT: React.FC = () => {
 
-    return (
-        <div className='page'>
-            <Playground
-                type='choice'
-                startScreen={<ChoiceStartScreen />}
-                stimulusScreen={<ChoiceStimulusScreen />}
-                waitScreen={<ChoiceWaitScreen />}
-                stimulusKeys={Object.keys(arrowsMap)}
-            />
-            <div className='pt-3'>
+	return (
+		<div className='page'>
+			<Playground
+				type='choice'
+				startScreen={<ChoiceStartScreen />}
+				stimulusScreen={<ChoiceStimulusScreen />}
+				waitScreen={<ChoiceWaitScreen />}
+				stimulusKeys={Object.keys(arrowsMap)}
+			/>
+			<div className='pt-3'>
 
-            </div>
-        </div>
-    )
+			</div>
+		</div>
+	)
 }

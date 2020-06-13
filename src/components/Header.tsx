@@ -1,9 +1,9 @@
 import React from 'react';
-import { FaUserPlus } from "react-icons/fa";
-import { IoIosStats } from "react-icons/io";
-import { MdDashboard } from "react-icons/md";
-import { RiLoginBoxLine, RiLogoutBoxLine } from "react-icons/ri";
-import { useHistory } from "react-router-dom";
+import { FaUserPlus } from 'react-icons/fa';
+import { IoIosStats } from 'react-icons/io';
+import { MdDashboard } from 'react-icons/md';
+import { RiLoginBoxLine, RiLogoutBoxLine } from 'react-icons/ri';
+import { useHistory } from 'react-router-dom';
 import { initGuestUser, useStateWithStorage, dateDiffNow } from './../utils';
 
 const Header: React.FC = () => {

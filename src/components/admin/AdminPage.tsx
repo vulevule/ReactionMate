@@ -6,11 +6,11 @@ import { AdminLoginForm } from './AdminLoginForm';
 import { AdminPanel } from './AdminPanel';
 
 export const AdminPage: React.FC = () => {
-  const [admin] = useStateWithStorage<Admin>('admin', false);
+	const [admin] = useStateWithStorage<Admin>('admin', false);
 
-  return (
-    <div className='panelWrapper'>
-      {admin?.token ? <AdminPanel/> : <AdminLoginForm/>}
-    </div>
-  )
+	return (
+		<div className='panelWrapper'>
+			{admin?.token ? <AdminPanel/> : <AdminLoginForm/>}
+		</div>
+	)
 }

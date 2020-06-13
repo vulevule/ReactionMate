@@ -1,5 +1,5 @@
-import { ReactionTimeType } from "./Types";
-import { FormInput } from "../components/utilities/Forms";
+import { ReactionTimeType } from './Types';
+import { FormInput } from '../components/utilities/Forms';
 
 export interface Experiment {
   id: string;

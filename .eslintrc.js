@@ -21,6 +21,8 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': ['off'],
     'no-shadow': 'off',
     'linebreak-style': ['error', (process.platform === 'win32' ? 'windows' : 'unix')],
+    "indent": ["error", 'tab'],
+    'quotes': ["error", "single"]
   },
   settings: {
     react: {

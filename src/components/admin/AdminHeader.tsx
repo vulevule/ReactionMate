@@ -25,7 +25,7 @@ export const AdminHeader: React.FC = () => {
 					<h2><b>Admin panel • </b> {admin.name} // Joined {dateDiffNow(admin.created)} ago</h2>
 				</div>
 				<div className='d-flex flex-row'>
-          <NavButton callback={signout}><RiLogoutBoxLine/> Sign out</NavButton>
+					<NavButton callback={signout}><RiLogoutBoxLine/> Sign out</NavButton>
 				</div>
 			</div>
 		</div>
