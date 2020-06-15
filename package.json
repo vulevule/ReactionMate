@@ -1,5 +1,6 @@
 {
   "name": "reaction-time-web-app",
+  "homepage": "http://reactionmate.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,6 +16,7 @@
     "@types/recharts": "^1.8.9",
     "bootstrap": "^4.4.1",
     "copy-to-clipboard": "^3.3.1",
+    "gh-pages": "^3.0.0",
     "node-sass": "^4.13.1",
     "react": "^16.13.1",
     "react-bootstrap": "^1.0.0",
@@ -32,6 +34,8 @@
     "typescript": "~3.7.2"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
