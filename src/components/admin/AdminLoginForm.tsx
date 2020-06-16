@@ -38,7 +38,11 @@ export const AdminLoginForm: React.FC = () => {
 	return (
 		<div className='loginForm'>
 			<div className='hero-auto pt-4 pb-4 text-center'>
-				<h1 className='letterSpaced'>Welcome to Reacti<MdTimelapse size={'1.9rem'} />nMate admin panel</h1>
+				<h1 className='letterSpaced'>
+					Welcome to <br className='display-to-sm' />Reacti<MdTimelapse size={'1.9rem'} />nMate
+				</h1>
+				<br />
+				<h2>• Admin panel •</h2>
 			</div>
 			<br />
 			<div className='row flex-center-all'>

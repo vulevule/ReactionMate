@@ -59,11 +59,11 @@ const Header: React.FC = () => {
 				<div className={`display-to-${deviceSizeBreakpoint}`}>
 					<HeaderDropdown icon={<FaUser/>}>
 						{user.token ?
-							<NavButton callback={signout}><RiLogoutBoxLine/> Sign out</NavButton>
+							<NavButton callback={signout}><RiLogoutBoxLine/>&nbsp;Sign out</NavButton>
 							:
 							<div className='d-flex flex-column'>
-								<NavButton to='/signup'><FaUserPlus/> Sign up</NavButton>
-								<NavButton to='/login'><RiLoginBoxLine/> Login</NavButton>
+								<NavButton to='/signup'><FaUserPlus/>&nbsp;Sign up</NavButton>
+								<NavButton to='/login'><RiLoginBoxLine/>&nbsp;Login</NavButton>
 							</div>}
 					</HeaderDropdown>
 				</div>
