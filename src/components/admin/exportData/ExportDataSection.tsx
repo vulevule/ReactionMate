@@ -7,6 +7,8 @@ import { exportMultipleExperimentResults, exportSingleExperimentResults, getAllE
 import { useStateWithStorage } from '../../../utils';
 import { Form } from './../../utilities/Forms';
 
+const deviceSizeBreakpoint = 'md'
+
 export const ExportData: React.FC = () => {
 
 	return (
@@ -90,7 +92,7 @@ const ExportSingleExperiment: React.FC = () => {
 		<Form onSubmit={exportData} className='mb-5'>
 			<h4>Export single experiment results</h4>
 			<div className='form-row mt-3'>
-				<div className="col-3 form-group dropdown">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group dropdown`}>
 					<label htmlFor="name" className='mr-2'>Search by name</label>
 					<div className="input-group">
 						<div className="input-group-prepend">
@@ -123,7 +125,7 @@ const ExportSingleExperiment: React.FC = () => {
 						}
 					</div>
 				</div>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="expId" className='mr-2'>ID</label>
 					<input
 						type="text"
@@ -134,7 +136,7 @@ const ExportSingleExperiment: React.FC = () => {
 						required
 					/>
 				</div>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="dateFrom" className='mr-2'>Results from</label>
 					<input
 						type="datetime-local"
@@ -144,7 +146,7 @@ const ExportSingleExperiment: React.FC = () => {
 
 					/>
 				</div>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="dateTo" className='mr-2'>Results to</label>
 					<input
 						type="datetime-local"
@@ -210,10 +212,10 @@ const ExportMultipleExperiments: React.FC = () => {
 	}
 
 	return (
-		<Form onSubmit={exportData}>
+		<Form onSubmit={exportData} className='mb-5'>
 			<h4>Export multiple experiment results</h4>
 			<div className='form-row mt-3'>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="createdFrom" className='mr-2'>Created from</label>
 					<input
 						type="datetime-local"
@@ -222,7 +224,7 @@ const ExportMultipleExperiments: React.FC = () => {
 						onChange={e => setCreatedFrom(e.target.value)}
 					/>
 				</div>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="createdTo" className='mr-2'>Created to</label>
 					<input
 						type="datetime-local"
@@ -231,7 +233,7 @@ const ExportMultipleExperiments: React.FC = () => {
 						onChange={e => setCreatedTo(e.target.value)}
 					/>
 				</div>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="expirationFrom" className='mr-2'>Expiration from</label>
 					<input
 						type="datetime-local"
@@ -240,7 +242,7 @@ const ExportMultipleExperiments: React.FC = () => {
 						onChange={e => setExpirationFrom(e.target.value)}
 					/>
 				</div>
-				<div className="col-3 form-group">
+				<div className={`col-12 col-${deviceSizeBreakpoint}-3 form-group`}>
 					<label htmlFor="expirationTo" className='mr-2'>Expiration to</label>
 					<input
 						type="datetime-local"
@@ -274,8 +276,12 @@ const ExportMultipleExperiments: React.FC = () => {
 						<label className="custom-control-label" htmlFor='allowMultipleAnswers' />
 					</div>
 				</div>
+				<button type='submit' className={`btn btn-primary display-from-${deviceSizeBreakpoint}`}>Export</button>
+			</div>
+			<div className={`display-to-${deviceSizeBreakpoint} justify-content-end mt-3`}>
 				<button type='submit' className='btn btn-primary'>Export</button>
 			</div>
+			
 		</Form>
 
 	)

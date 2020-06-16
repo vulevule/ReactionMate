@@ -135,22 +135,25 @@ export const RequiredDataSection: React.FC<Props> = ({ onUpdateData, inputData }
 					</select>
 				</h6>
 				<div className='card-text text-center'>
-					<table className='w-100 mb-3 table-sm'>
-						{!!requiredData.length &&
+					<div className='table-responsive mb-3'>
+						<table className='table-sm reqDataTable'>
+							{!!requiredData.length &&
 							<thead><tr>
-								<th>Label</th>
+								<th className='labelColumn'>Label</th>
 								<th>Type</th>
-								<th>IVF / Options*</th>
+								<th className='optionsColumn'>IVF / Options*</th>
 								<th>Required</th>
 							</tr></thead>
-						}
+							}
 
-						<tbody>
-							{requiredData.map((elem, i) => (
-								<SingleRow key={i} data={elem} remove={() => removeRow(i)} onClickRow={() => onSelect(i)} />
-							))}
-						</tbody>
-					</table>
+							<tbody>
+								{requiredData.map((elem, i) => (
+									<SingleRow key={i} data={elem} remove={() => removeRow(i)} onClickRow={() => onSelect(i)} />
+								))}
+							</tbody>
+						</table>
+					</div>
+					
 					<IoIosAddCircleOutline onClick={() => openModal('create')} className='pointer' size='2rem' />
 				</div>
 				{!!requiredData.length &&
@@ -164,7 +167,7 @@ export const RequiredDataSection: React.FC<Props> = ({ onUpdateData, inputData }
 							>
 								Save as a template {!showDropdown ? <MdKeyboardArrowRight /> : <MdKeyboardArrowDown />}
 							</button>
-							<div className={`dropdown-menu ${showDropdown ? 'show' : ''}`}>
+							<div className={`dropdown-menu dropdown-menu-right ${showDropdown ? 'show' : ''}`}>
 								<div className="save-template-dropdown-item form-inline">
 									<input
 										className="form-control form-control-sm"
@@ -208,11 +211,7 @@ interface SingleRowProps {
 const SingleRow: React.FC<SingleRowProps> = ({ data, remove, onClickRow }) => {
 	const generateOptionsString = () => {
 		if (!data.options) return;
-		if (data.options.length > 2) {
-			return data.options.slice(0, 2).map(e => e.label).join(', ').concat('...');
-		} else {
-			return data.options.map(e => e.label).join(', ')
-		}
+		return data.options.map(e => e.label).map((t, i) => <span key={i}>{t}<br /></span>)
 	}
 
 	const handleRemove = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {

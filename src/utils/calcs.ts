@@ -56,16 +56,16 @@ export const dateDiffNow = (date: number | Date | string) => {
 
 type Interval = 'year' | 'month' | 'day' | 'hour' | 'minute'
 
-export const dateFromNow = (params: {[key in Interval]?: number}) => {
+export const dateFromNow = (params: { [key in Interval]?: number }) => {
 	const { year, month, day, hour, minute } = params;
-    
+
 	const date = new Date();
 	const years = date.getFullYear();
 	const months = date.getMonth();
 	const days = date.getDate();
 	const hours = date.getHours();
 	const minutes = date.getMinutes();
-    
+
 	return new Date(
 		years + (year || 0),
 		months + (month || 0),

@@ -19,6 +19,12 @@ $xl: map-get($map: $grid-breakpoints, $key: 'xl');
 @each $key, $value in $grid-breakpoints {
   .display-from-#{$key} {
     @media (min-width: $value) {
+      display: flex;
+    }
+    display: none;
+  }
+  .d-block-from-#{$key} {
+    @media (min-width: $value) {
       display: block;
     }
     display: none;
@@ -29,6 +35,12 @@ $xl: map-get($map: $grid-breakpoints, $key: 'xl');
     }
   }
   .display-to-#{$key} {
+    @media (max-width: $value) {
+      display: flex;
+    }
+    display: none;
+  }
+  .d-block-to-#{$key} {
     @media (max-width: $value) {
       display: block;
     }

@@ -4,6 +4,7 @@ import { AdminHeader } from './AdminHeader';
 import { ExperimentsConfigPage } from './experiments/ExperimentsConfigPage';
 import { GeneralConfigPage } from './configs/GeneralConfigPage';
 import { ExportData } from './exportData/ExportDataSection';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 
 export const AdminPanel: React.FC = () => {
 
@@ -26,7 +27,7 @@ export const AdminPanel: React.FC = () => {
 			<AdminHeader />
 			<div className='pt-3 content'>
 				<div className='mt-1'>
-					<ul className="nav nav-tabs nav-justified">
+					<ul className="display-from-sm nav nav-tabs nav-justified">
 						{Object.keys(tabs).map((tab, i) =>
 							<li key={i} className="nav-item">
 								<Link
@@ -39,6 +40,29 @@ export const AdminPanel: React.FC = () => {
 							</li>
 						)}
 					</ul>
+					<div className="display-to-sm justify-content-center">
+						<DropdownButton
+							id="dropdown-item-button"
+							title={<span className='text-capitalize'>{tabs[selected]}</span>}
+							variant='link'
+						>
+							{Object.keys(tabs).map((tab, i) =>
+								<Dropdown.Item
+									key={i}
+									as="button"
+									active={selected === tab}
+								>
+									<Link
+										className={'text-capitalize ' + (selected === tab ? 'text-white' : '')}
+										onClick={() => setSelected(tab)}
+										to={`${url}/${tab}`}
+									>
+										{tabs[tab]}
+									</Link>
+								</Dropdown.Item>
+							)}
+						</DropdownButton>
+					</div>
 				</div>
 
 				<Switch>

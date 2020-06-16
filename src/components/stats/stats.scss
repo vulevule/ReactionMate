@@ -1,20 +1,36 @@
 @import './../../globals.scss';
 
 .averageScoreText {
-    font-size: 4rem;
-    line-height: 2.5rem;
+  font-size: 4rem;
+  line-height: 2.5rem;
 }
 
 .dateText {
-    color: #ccc
+  color: #ccc
 }
 
 .msg {
-    font-weight: 500;
+  font-weight: 500;
 }
 
 .chartSwitches {
-    margin-left: 5%;
-    display: flex;
-    flex-flow: row;
+  margin-left: 5%;
+  display: flex;
+  flex-flow: row;
+}
+
+.statsTable {
+  th {
+    min-width: 3rem;
+  }
+  tbody tr td {
+    min-width: 3rem;
+    vertical-align: middle;
+  }
+  .typeColumn {
+    max-width: 3rem;
+  }
+  .dateColumn {
+    min-width: 15rem;
+  }
 }

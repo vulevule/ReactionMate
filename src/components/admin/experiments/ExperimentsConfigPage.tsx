@@ -12,7 +12,7 @@ import { Experiment } from './../../../model/Experiment';
 import { createExperiment, deleteExperiment, updateExperiment } from './../../../services/experimentServices';
 import { dateFromNow } from './../../../utils/calcs';
 import { useStateWithStorage } from './../../../utils/inits';
-import { formatDate } from './../../../utils/other';
+import { formatDate, formatISOLocalDate } from './../../../utils/other';
 import { Form, FormInput } from './../../utilities/Forms';
 import { Spinner } from './../../utilities/Loaders';
 import './experiments.scss';
@@ -156,13 +156,13 @@ const ExperimentsTable: React.FC<ExperimentsProps> = ({ experiments, onDeleted, 
 	return (
 		<div>
 			<div className='table-responsive'>
-				<table className='table-sm w-100'>
+				<table className='table-sm w-100 expTable'>
 					<thead><tr>
-						<th scope="col">Link</th>
+						<th scope="col" className='linkColumn'>Link</th>
 						<th scope="col">Name</th>
-						<th scope="col">Created</th>
-						<th scope="col">Expiration</th>
-						<th scope="col">Required Data</th>
+						<th scope="col" className='dateColumn'>Created</th>
+						<th scope="col" className='dateColumn'>Expiration</th>
+						<th scope="col" className='reqDataColumn'>Required Data</th>
 						<th scope="col">Tests</th>
 						<th scope="col">AMR*</th>
 						<th scope="col">Enabled</th>
@@ -199,11 +199,7 @@ const SingleRow: React.FC<SingleRowProps> = ({ data, onDeleted, onRowClick }) =>
 	const requredDataString = () => {
 		const requiredData = requiredDataConfig;
 		if (!requiredData?.length) return 'N/A';
-		if (requiredData.length > 2) {
-			return requiredData.slice(0, 2).map(e => e.label).join(', ').concat('...');
-		} else {
-			return requiredData.map(e => e.label).join(', ')
-		}
+		return requiredData.map(e => e.label).map((t, i) => <span key={i}>{t}<br /></span>)
 	}
 
 	const testsString = () => {
@@ -308,7 +304,11 @@ const ExperimentBaseForm: React.FC<ExperimentBaseFormProps> = ({
 	const [admin] = useStateWithStorage<Admin>('admin', false);
 
 	const initExpirationString = (date?: Date) => {
-		return date?.toISOString().substring(0, 19) || dateFromNow({ 'day': 7 }).toISOString().substring(0, 19);
+		if (date) {
+			return formatISOLocalDate(date)
+		} else {
+			return formatISOLocalDate(dateFromNow({ 'day': 7 }))
+		}
 	}
 
 	const [requiredData, setRequiredData] = useState<FormInput[]>(exp?.requiredDataConfig || [])
@@ -332,6 +332,7 @@ const ExperimentBaseForm: React.FC<ExperimentBaseFormProps> = ({
 		setExpiration(initExpirationString(exp?.expiration));
 		setAllowMultipleAnswers(exp?.allowMultipleAnswers || false);
 		setDisabled(exp?.disabled || false);
+		setName(exp?.name)
 	}, [exp])
 
 	const create = async () => {
@@ -431,6 +432,7 @@ const ExperimentBaseForm: React.FC<ExperimentBaseFormProps> = ({
 						<label htmlFor="expiration" className='mr-3'>Expiration</label>
 						<input
 							type="datetime-local"
+							min={formatISOLocalDate(new Date())}
 							className="form-control"
 							id="expiration"
 							onChange={e => setExpiration(e.target.value)}

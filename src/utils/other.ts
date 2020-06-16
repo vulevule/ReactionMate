@@ -28,10 +28,18 @@ export const formatDate = (date: number | Date, format: DateFormat = 'UTC') => {
 		// const minute = new Intl.DateTimeFormat('en', { minute: '2-digit' }).format(d);
 		return `${weekday}, ${day}/${month}/${year} - ${hour}`
 	}
+}
 
-    
-
-
-
-    
+export const formatISOLocalDate = (date: number | Date) => {
+	const d = new Date(date);
+	const pad = (num: number) => {
+		const norm = Math.floor(Math.abs(num));
+		return (norm < 10 ? '0' : '') + norm;
+	};
+	return d.getFullYear() +
+		'-' + pad(d.getMonth() + 1) +
+		'-' + pad(d.getDate()) +
+		'T' + pad(d.getHours()) +
+		':' + pad(d.getMinutes()) +
+		':' + pad(d.getSeconds())
 }

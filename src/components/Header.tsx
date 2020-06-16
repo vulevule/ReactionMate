@@ -1,12 +1,14 @@
-import React from 'react';
-import { FaUserPlus } from 'react-icons/fa';
+import React, { useState, useEffect, useRef } from 'react';
+import { FaUserPlus, FaBars, FaUser } from 'react-icons/fa';
 import { IoIosStats } from 'react-icons/io';
 import { MdDashboard } from 'react-icons/md';
 import { RiLoginBoxLine, RiLogoutBoxLine } from 'react-icons/ri';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { initGuestUser, useStateWithStorage, dateDiffNow } from './../utils';
 
 const Header: React.FC = () => {
+
+	const deviceSizeBreakpoint = 'lg'
 
 	const [user, setState] = useStateWithStorage('user');
 
@@ -18,23 +20,54 @@ const Header: React.FC = () => {
 	return (
 		<div className='header shadow'>
 			<div className='container headerContent'>
-				<div className='d-flex flex-row'>
-					<NavButton to='/dashboard'><MdDashboard /> Dashboard</NavButton>
-					<NavButton to='/stats'><IoIosStats /> Stats</NavButton>
+				<div className={`display-from-${deviceSizeBreakpoint}`}>
+					<div className='d-flex flex-row justify-content-center'>
+						<NavButton to='/dashboard'><MdDashboard />&nbsp;Dashboard</NavButton>
+						<NavButton to='/stats'><IoIosStats />&nbsp;Stats</NavButton>
+					</div>
 				</div>
-				<div className='flex-center-all'>
-					<h2>{user.name} // Joined {dateDiffNow(user.created)} ago</h2>
+				<div className={`display-to-${deviceSizeBreakpoint}`}>
+					<HeaderDropdown icon={<FaBars />}>
+						<NavButton to='/dashboard'><MdDashboard />&nbsp;Dashboard</NavButton>
+						<NavButton to='/stats'><IoIosStats />&nbsp;Stats</NavButton>
+					</HeaderDropdown>
 				</div>
-				<div className='d-flex flex-row'>
-					{user.token ?
-						<NavButton callback={signout}><RiLogoutBoxLine/> Sign out</NavButton>
-						:
-						<>
-							<NavButton to='/signup'><FaUserPlus/> Sign up</NavButton>
-							<NavButton to='/login'><RiLoginBoxLine/> Login</NavButton>
-						</>}
 
+				<div className={`display-from-${deviceSizeBreakpoint}`}>
+					<div className='flex-center-all'>
+						<h2>{user.name} // Joined {dateDiffNow(user.created)} ago</h2>
+					</div>
 				</div>
+				<div className={`display-to-${deviceSizeBreakpoint}`}>
+					<div className='flex-center-all flex-column p-1'>
+						<h2>{user.name}</h2>
+						<small>Joined {dateDiffNow(user.created)} ago</small>
+					</div>
+				</div>
+
+				<div className={`display-from-${deviceSizeBreakpoint}`}>
+					<div className='d-flex flex-row justify-content-center'>
+						{user.token ?
+							<NavButton callback={signout}><RiLogoutBoxLine/>&nbsp;Sign out</NavButton>
+							:
+							<>
+								<NavButton to='/signup'><FaUserPlus/>&nbsp;Sign up</NavButton>
+								<NavButton to='/login'><RiLoginBoxLine/>&nbsp;Login</NavButton>
+							</>}
+					</div>
+				</div>
+				<div className={`display-to-${deviceSizeBreakpoint}`}>
+					<HeaderDropdown icon={<FaUser/>}>
+						{user.token ?
+							<NavButton callback={signout}><RiLogoutBoxLine/> Sign out</NavButton>
+							:
+							<div className='d-flex flex-column'>
+								<NavButton to='/signup'><FaUserPlus/> Sign up</NavButton>
+								<NavButton to='/login'><RiLoginBoxLine/> Login</NavButton>
+							</div>}
+					</HeaderDropdown>
+				</div>
+				
 			</div>
 		</div>
 	)
@@ -48,27 +81,78 @@ interface NavButtonProps {
 
 export const NavButton: React.FC<NavButtonProps> = ({ to, callback, children }) => {
 
+	const [active, setActive] = useState(false);
 	const history = useHistory();
+	const location = useLocation();
+
+	useEffect(() => {
+		const sub = location.pathname.substr(1);
+		to && to !== '/' && setActive(sub.startsWith(to.substr(1)));
+	}, [location])
 
 	const handleClick = () => {
 		if (to) history.push(to);
 		callback?.();
 	}
 
-	const isActive = () => {
-		if (!to || to.length <= 1) return false;
-
-		const sub = history.location.pathname.substr(1);
-		return sub.startsWith(to.substr(1));
-	};
-
 	return (
 		<span
-			className={'headerButton ' + (isActive() ? 'active' : '')}
+			className={'headerButton ' + (active ? 'active' : '')}
 			onClick={handleClick}
 		>
 			{children}
 		</span>
+	)
+}
+
+interface DropdownButtonProps {
+	icon: React.ReactNode;
+	children?: React.ReactNode;
+}
+
+export const HeaderDropdown: React.FC<DropdownButtonProps> = ({children, icon}) => {
+	const [showDropdown, setShowDropdown] = useState(false);
+	const closeDropdown = () => setShowDropdown(false);
+	const [alignRight, setAlignRight] = useState(false);
+	
+	const ref = useRef<HTMLDivElement>(null);
+
+	const handleClick = () => {
+		setShowDropdown(old => !old)
+	}
+
+	const determinePosition = () => {
+		const { innerWidth: screenWidth } = window;
+		const { right } = ref.current?.getBoundingClientRect() || {};
+		if (right && right > screenWidth) {
+			setAlignRight(true);
+		}
+	}
+
+	useEffect(() => {
+		determinePosition()
+	}, [showDropdown])
+
+	return (
+		<div
+			tabIndex={0}
+			className='dropdown headerButton'
+			onBlur={closeDropdown}
+		>
+			<span	onClick={handleClick}>
+				{icon}
+			</span>
+			<div
+				ref={ref}
+				className={`dropdown-menu ${alignRight ? 'dropdown-menu-right' : ''} ${showDropdown ? 'show' : ''}`}
+			>
+				{React.Children.map(children, child => (
+					<div className='d-flex' onClick={closeDropdown}>
+						{child}
+					</div>
+				))}
+			</div>
+		</div>
 	)
 }
 

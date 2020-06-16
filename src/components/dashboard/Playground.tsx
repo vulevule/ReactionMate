@@ -484,7 +484,7 @@ const BottomStats: React.FC<BottomStatsProps> = ({ tryNo, maxTries, tries, wrong
 			</p>
 			<p className='col-4 col-sm-12 text-transparent'>
 				<span className='display-from-sm'>{scoresRowString}</span>
-				<span className='display-to-sm'>{scoresColumnString}</span>
+				<span className='display-to-sm flex-column'>{scoresColumnString}</span>
 			</p>
 		</div>
 	)

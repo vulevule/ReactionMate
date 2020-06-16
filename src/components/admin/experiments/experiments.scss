@@ -11,6 +11,7 @@
 
   &::-webkit-scrollbar {
     width: 5px;
+    height: 5px;
   }
   
   /* Track */
@@ -28,6 +29,40 @@
   /* Handle on hover */
   &::-webkit-scrollbar-thumb:hover {
     background: #555; 
+  }
+}
+
+.expTable {
+  th {
+    min-width: 1rem;
+  }
+  td {
+    min-width: 1rem;
+  }
+  .linkColumn {
+    max-width: 5rem;
+  }
+  .reqDataColumn {
+    max-width: 15rem;
+    min-width: 10rem;
+  }
+  .dateColumn {
+    min-width: 10rem;
+  }
+}
+
+.reqDataTable {
+  th {
+    min-width: 1rem;
+  }
+  td {
+    min-width: 1rem;
+  }
+  .labelColumn {
+    min-width: 10rem;
+  }
+  .optionsColumn {
+    min-width: 10rem;
   }
 }
 

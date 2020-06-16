@@ -8,12 +8,18 @@ import { SpecificScores, User } from './../../model/User';
 import { useStateWithStorage } from './../../utils/inits';
 import { formatDate } from './../../utils/other';
 import './stats.scss';
+import { DropdownButton, Dropdown } from 'react-bootstrap';
 
 export const Stats: React.FC = () => {
 
 	const { path, url } = useRouteMatch();
 	const tabs: ReactionTimeType[] = ['simple', 'recognition', 'choice', 'discrimination']
-	const [selected, setSelected] = useState(tabs.find(e => window.location.pathname.endsWith(e)));
+
+	const getInitSelected = () => (
+		tabs.find(e => window.location.pathname.endsWith(e)) || tabs[0]
+	)
+
+	const [selected, setSelected] = useState(getInitSelected());
 	const [lastSelected, setLastSelected] = useState('simple')
 	const [tabsFirstSelect, setTabsFirstSelect] = useState({
 		simple: true,
@@ -31,7 +37,7 @@ export const Stats: React.FC = () => {
 	return (
 		<div className='h-100'>
 			<div className='mt-1'>
-				<ul className="nav nav-tabs nav-justified">
+				<ul className="display-from-sm nav nav-tabs nav-justified">
 					{tabs.map((tab, i) =>
 						<li key={i} className="nav-item">
 							<Link
@@ -43,8 +49,30 @@ export const Stats: React.FC = () => {
 							</Link>
 						</li>
 					)}
-
 				</ul>
+				<div className="display-to-sm justify-content-center">
+					<DropdownButton
+						id="dropdown-item-button"
+						title={<span className='text-capitalize'>{selected}</span>}
+						variant='link'
+					>
+						{tabs.map((tab, i) =>
+							<Dropdown.Item
+								key={i}
+								as="button"
+								active={selected === tab}
+							>
+								<Link
+									className={'text-capitalize ' + (selected === tab ? 'text-white' : '')}
+									onClick={() => selectTab(tab)}
+									to={`${url}/${tab}`}
+								>
+									{tab}
+								</Link>
+							</Dropdown.Item>
+						)}
+					</DropdownButton>
+				</div>
 			</div>
 
 			<Switch>
@@ -69,11 +97,11 @@ export const Stats: React.FC = () => {
 }
 
 interface ReactionTimeStatsProps {
-    type: ReactionTimeType;
-    firstSelect?: boolean;
-    showAverage?: boolean;
-    showBest?: boolean;
-    showSuccess?: boolean;
+	type: ReactionTimeType;
+	firstSelect?: boolean;
+	showAverage?: boolean;
+	showBest?: boolean;
+	showSuccess?: boolean;
 }
 
 interface SpecificScoreProps extends ReactionTimeStatsProps {
@@ -126,12 +154,15 @@ const ReactionTypeStats: React.FC<ReactionTimeStatsProps> = ({ type, showAverage
 }
 
 interface ActivityFeedCardProps extends Partial<SpecificScoreProps> {
-    showDate?: boolean;
-    showTries?: boolean;
-    title?: string;
+	showType?: boolean;
+	showDate?: boolean;
+	showTries?: boolean;
+	title?: string;
 }
 
-export const ActivityFeedCard: React.FC<ActivityFeedCardProps> = ({ title, scores, showAverage, showBest, showSuccess, showDate = true, showTries }) => {
+export const ActivityFeedCard: React.FC<ActivityFeedCardProps> = ({ title, scores, showType, showAverage, showBest, showSuccess, showDate = true, showTries }) => {
+
+	const deviceSizeBreakpoint = 'md'
 
 	return (
 		<div className='w-100 card shadow-sm mb-3'>
@@ -139,29 +170,43 @@ export const ActivityFeedCard: React.FC<ActivityFeedCardProps> = ({ title, score
 				<h5 className='card-title'>{title || 'Activity feed'}</h5>
 				<div className='card-text'>
 					{scores?.length ?
-						<table className='w-100'>
-							<thead><tr>
-								<th>Test</th>
-								{showTries && <th>Tries</th>}
-								{showDate && <th>Date</th>}
-								{showAverage && <th>Average</th>}
-								{showBest && <th>Best</th>}
-								{showSuccess && <th>Success</th>}
-							</tr></thead>
-							<tbody>
-								{scores?.map((s, i) =>
-									<tr key={i}>
-										<td className='text-capitalize'>{s.type}</td>
-										{showTries && <td>{s.tries}</td>}
-										{showDate && <td >{dateDiffNow(s.date)} ago <span className='dateText'>| {formatDate(s.date)}</span></td>}
-										{showAverage && <td>{s.average}ms</td>}
-										{showBest && <td>{s.best}ms</td>}
-										{showSuccess && <td>{s.success}%</td>}
-									</tr>
-                                )}
-							</tbody>
-						</table>
-
+						<div>
+							<div className='table-responsive'>
+								<table className='table table-sm mb-3 statsTable'>
+									<thead><tr>
+										{showType && <th scope="col" className='typeColumn'>Test</th>}
+										{showTries && <th scope="col">Tries</th>}
+										{showDate && <th scope="col" className='dateColumn'>Date</th>}
+										{showAverage && <th scope="col">Average</th>}
+										{showBest && <th scope="col">Best</th>}
+										{showSuccess && <th scope="col">Success</th>}
+									</tr></thead>
+									<tbody>
+										{scores?.map((s, i) =>
+											<tr key={i}>
+												{showType &&  <td className='text-capitalize'>{s.type[0]}</td>}
+												{showTries && <td>{s.tries}</td>}
+												{showDate && <td >
+													{dateDiffNow(s.date)} ago <br className={`display-to-${deviceSizeBreakpoint}`} />
+													<span className='dateText'>
+														• {formatDate(s.date, 'custom')} •
+													</span>
+												</td>}
+												{showAverage && <td>{s.average}ms</td>}
+												{showBest && <td>{s.best}ms</td>}
+												{showSuccess && <td>{s.success}%</td>}
+											</tr>
+										)}
+									</tbody>
+								</table>
+							</div>
+							{showType && <div className='pt-3'>
+								<small className='text-muted w-100'>
+									S - Simple, C - Choice, <br className={`display-to-${deviceSizeBreakpoint}`} />R - Recognition, D - Discrimination
+								</small>
+							</div>}
+						</div>
+						
 						: <span className='averageScoreText'>N/A</span>}
 				</div>
 			</div>
@@ -188,10 +233,10 @@ const RecentResultsCard: React.FC<SpecificScoreProps> = ({ scores, showAverage, 
 					<ResponsiveContainer width='95%' height={300}>
 						<LineChart data={data}>
 							{showAverageOnChart &&
-                                <Line type="monotone" dataKey="average" stroke="#8884d8" isAnimationActive={firstSelect} />
+								<Line type="monotone" dataKey="average" stroke="#8884d8" isAnimationActive={firstSelect} />
 							}
 							{showBestOnChart &&
-                                <Line type="monotone" dataKey="best" stroke="#82ca9d" isAnimationActive={firstSelect} />
+								<Line type="monotone" dataKey="best" stroke="#82ca9d" isAnimationActive={firstSelect} />
 							}
 							<CartesianGrid stroke="#ccc" strokeDasharray="5 5" />
 							<XAxis dataKey="date" padding={{ left: 30, right: 30 }} />
