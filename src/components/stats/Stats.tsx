@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Dropdown, DropdownButton } from 'react-bootstrap';
 import CountUp from 'react-countup';
 import { Link, Route, Switch, useRouteMatch } from 'react-router-dom';
 import { Brush, CartesianGrid, Legend, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -8,7 +9,6 @@ import { SpecificScores, User } from './../../model/User';
 import { useStateWithStorage } from './../../utils/inits';
 import { formatDate } from './../../utils/other';
 import './stats.scss';
-import { DropdownButton, Dropdown } from 'react-bootstrap';
 
 export const Stats: React.FC = () => {
 
@@ -35,7 +35,7 @@ export const Stats: React.FC = () => {
 	}
 
 	return (
-		<div className='h-100'>
+		<div className='page-min-height'>
 			<div className='mt-1'>
 				<ul className="display-from-sm nav nav-tabs nav-justified">
 					{tabs.map((tab, i) =>
@@ -108,7 +108,9 @@ interface SpecificScoreProps extends ReactionTimeStatsProps {
     scores: SpecificScores;
 }
 
-const ReactionTypeStats: React.FC<ReactionTimeStatsProps> = ({ type, showAverage = true, showBest = true, showSuccess = true, firstSelect }) => {
+const ReactionTypeStats: React.FC<ReactionTimeStatsProps> = ({
+	type, showAverage = true, showBest = true, showSuccess = true, firstSelect
+}) => {
 
 	const [user] = useStateWithStorage<User>('user');
 	const averages = user.scores[type].map(s => s.average);
@@ -133,7 +135,9 @@ const ReactionTypeStats: React.FC<ReactionTimeStatsProps> = ({ type, showAverage
 						{showBest && <BestScoreCard score={bestScore} firstSelect={firstSelect} />}
 						{showSuccess && <SuccessScoreCard score={successScore} firstSelect={firstSelect} />}
 					</div>
-					<p className='msg'>You can do it better, right? <Link to={'/' + type}>Take the test</Link>, and improve your results!</p>
+					<p className='msg'>
+						You can do it better, right? <Link to={'/' + type}>Take the test</Link>, and improve your results!
+					</p>
 					<RecentResultsCard
 						type={type}
 						showAverage={showAverage}
@@ -304,7 +308,6 @@ const SingleScoreCard: React.FC<SingleScoreProps> = ({ score, title, firstSelect
 			<div className='card-body text-center'>
 				<h5 className='card-title'>{title}</h5>
 				<span className='card-text averageScoreText'>
-					{/* {firstSelect ? <CountUp end={score} delay={1} decimals={decimals} redraw /> : score} */}
 					<CountUp start={firstSelect ? 0 : score} end={score} delay={1} decimals={decimals} />
 				</span>
 				{!!score && <cite>{unit}</cite>}

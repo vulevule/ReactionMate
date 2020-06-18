@@ -9,35 +9,36 @@ import { ReactionTimeType } from '../../model/Types';
 import { toast } from 'react-toastify';
 import { SpecificScore } from '../../model/User';
 import { User } from './../../model/User';
+import { useHistory } from 'react-router-dom';
 
 export interface ExperimentMode {
-		lastTest?: boolean;
-		onSaveTestScore?: (data: SpecificScore) => void;
-		tries: number;
+	lastTest?: boolean;
+	onSaveTestScore?: (data: SpecificScore) => void;
+	tries: number;
 }
 
 interface PlaygroundProps {
-		type: ReactionTimeType;
-		startScreen: JSX.Element;
-		stimulusScreen: JSX.Element;
-		waitScreen?: JSX.Element;
-		correctReactionScreen?: JSX.Element;
-		wrongReactionScreen?: JSX.Element;
-		untimedReactionScreen?: JSX.Element;
-		resultScreen?: JSX.Element;
+	type: ReactionTimeType;
+	startScreen: JSX.Element;
+	stimulusScreen: JSX.Element;
+	waitScreen?: JSX.Element;
+	correctReactionScreen?: JSX.Element;
+	wrongReactionScreen?: JSX.Element;
+	untimedReactionScreen?: JSX.Element;
+	resultScreen?: JSX.Element;
 
-		/**
-		 * When false, all content and user reaction handling will be set in parent component where the stimulus component is created
-		 */
-		staticStimulusContent?: boolean;
+	/**
+	 * When false, all content and user reaction handling will be set in parent component where the stimulus component is created
+	 */
+	staticStimulusContent?: boolean;
 
-		/**
-		 * Allowed keyboard keys on stimulus screen.
-		 * Default space and enter.
-		 */
-		stimulusKeys?: string[];
+	/**
+	 * Allowed keyboard keys on stimulus screen.
+	 * Default space and enter.
+	 */
+	stimulusKeys?: string[];
 
-		experimentMode?: ExperimentMode;
+	experimentMode?: ExperimentMode;
 }
 
 export const Playground: React.FC<PlaygroundProps> = ({
@@ -71,6 +72,8 @@ export const Playground: React.FC<PlaygroundProps> = ({
 	const stimulusTimeoutTrigger = useRef(0);
 
 	const timerIncrementStep = 4;
+
+	const history = useHistory();
 
 	useEffect(() => {
 		// Add something if needed
@@ -212,13 +215,15 @@ export const Playground: React.FC<PlaygroundProps> = ({
 
 		if (!user.token?.length) {
 			setUser(old => ({ ...old, scores: { ...old.scores, [type]: [saveScoreData].concat(old.scores[type]) } }))
-			window.location.pathname = '/stats/' + type;
+			// window.location.pathname = '/stats/' + type;
+			history.push(`/stats/${type}`)
 		} else {
 			const [data, status] = await saveScoreAPI(saveScoreData);
 
 			if (data && status === 200) {
 				setUser(data as User);
-				window.location.pathname = '/stats/' + type;
+				// window.location.pathname = '/stats/' + type;
+				history.push(`/stats/${type}`)
 			} else {
 				toast.error(data)
 			}
@@ -239,96 +244,96 @@ export const Playground: React.FC<PlaygroundProps> = ({
 			best: Math.min(...tries)
 		}
 
-				onSaveTestScore?.(saveScoreData)
+		onSaveTestScore?.(saveScoreData)
 	}
 
 	return (
 		<div className={`hero${experimentMode ? '-exp' : ''} ${status.displayStimulus ? `bg-${stimulusColor}` : ''} ${(status.untimed || status.failed) ? 'bg-red' : ''}`}>
 			{!status.active && !status.finished &&
-								<StartScreen
-									onClick={start}
-									onKeyDown={e => keyPress(e, start)}
-								>
-									{startScreen}
-								</StartScreen>}
+				<StartScreen
+					onClick={start}
+					onKeyDown={e => keyPress(e, start)}
+				>
+					{startScreen}
+				</StartScreen>}
 
 			{status.active && !status.tryDone && !status.displayStimulus && !status.untimed && !status.failed &&
-								<WaitScreen
-									onClick={untimedReaction}
-									onRightClick={untimedReaction}
-									onKeyDown={e => keyPress(e, untimedReaction)}
-								>
-									{waitScreen}
-								</WaitScreen>}
+				<WaitScreen
+					onClick={untimedReaction}
+					onRightClick={untimedReaction}
+					onKeyDown={e => keyPress(e, untimedReaction)}
+				>
+					{waitScreen}
+				</WaitScreen>}
 
 			{status.active && !status.tryDone && status.displayStimulus &&
-								<StimulusScreen
-									updateParentState={setStateFromChild}
-									staticContent={staticStimulusContent}
-									onClick={handleClick}
-									onKeyDown={(e, ...args) => keyPress(e, handleClick, ...args)}
-								>
-									{stimulusScreen}
-								</StimulusScreen>
+				<StimulusScreen
+					updateParentState={setStateFromChild}
+					staticContent={staticStimulusContent}
+					onClick={handleClick}
+					onKeyDown={(e, ...args) => keyPress(e, handleClick, ...args)}
+				>
+					{stimulusScreen}
+				</StimulusScreen>
 			}
 
 			{status.active && !status.tryDone && status.untimed &&
-								<UntimedReactionScreen onKeyDown={e => e.preventDefault()}>
-									{untimedReactionScreen}
-								</UntimedReactionScreen>}
+				<UntimedReactionScreen onKeyDown={e => e.preventDefault()}>
+					{untimedReactionScreen}
+				</UntimedReactionScreen>}
 
 			{status.active && !status.tryDone && status.failed &&
-								<WrongReactionScreen onKeyDown={e => e.preventDefault()}>
-									{wrongReactionScreen}
-								</WrongReactionScreen>}
+				<WrongReactionScreen onKeyDown={e => e.preventDefault()}>
+					{wrongReactionScreen}
+				</WrongReactionScreen>}
 
 			{status.active && status.tryDone &&
-								<CorrectReactionScreen
-									result={status.tries[status.tries.length - 1]}
-									onKeyDown={e => keyPress(e, newTrySuccess)}
-									onClick={newTrySuccess}
-								>
-									{correctReactionScreen}
-								</CorrectReactionScreen>}
+				<CorrectReactionScreen
+					result={status.tries[status.tries.length - 1]}
+					onKeyDown={e => keyPress(e, newTrySuccess)}
+					onClick={newTrySuccess}
+				>
+					{correctReactionScreen}
+				</CorrectReactionScreen>}
 
 			{!status.active && status.finished &&
-								<ResultScreen
-									experimentMode={!!experimentMode}
-									lastInExperiment={lastTest}
-									result={status.tries[status.tries.length - 1]}
-									onClick={experimentMode ? undefined : start}
-									onKeyDown={e => keyPress(e, experimentMode ? saveExperimentScore : start)}
-									saveScore={experimentMode ? saveExperimentScore : saveScore}
-								>
-									{resultScreen}
-								</ResultScreen>}
+				<ResultScreen
+					experimentMode={!!experimentMode}
+					lastInExperiment={lastTest}
+					result={status.tries[status.tries.length - 1]}
+					onClick={experimentMode ? undefined : start}
+					onKeyDown={e => keyPress(e, experimentMode ? saveExperimentScore : start)}
+					saveScore={experimentMode ? saveExperimentScore : saveScore}
+				>
+					{resultScreen}
+				</ResultScreen>}
 
 			{(status.active || status.finished) &&
-								<BottomStats tryNo={status.tryNo} maxTries={maxTries} tries={status.tries} wrongAnswers={status.wrongAnswers} />}
+				<BottomStats tryNo={status.tryNo} maxTries={maxTries} tries={status.tries} wrongAnswers={status.wrongAnswers} />}
 		</div>
 	)
 
 }
 
 export interface ScreenProps {
-		onClick?: (reactionCorrect?: boolean) => void;
-		onRightClick?: () => void;
-		onKeyDown?: (e?: any, ...args: any[]) => void;
-		updateParentState?: (state: { [key: string]: any }) => void;
+	onClick?: (reactionCorrect?: boolean) => void;
+	onRightClick?: () => void;
+	onKeyDown?: (e?: any, ...args: any[]) => void;
+	updateParentState?: (state: { [key: string]: any }) => void;
 }
 
 interface StaticContentProps extends ScreenProps {
-		staticContent?: boolean;
+	staticContent?: boolean;
 }
 
 interface CorrectReactionScreenProps extends ScreenProps {
-		result: number;
-		saveScore?: (...args: any[]) => void;
+	result: number;
+	saveScore?: (...args: any[]) => void;
 }
 
 interface ResultScreenProps extends CorrectReactionScreenProps {
-		experimentMode?: boolean;
-		lastInExperiment?: boolean;
+	experimentMode?: boolean;
+	lastInExperiment?: boolean;
 }
 
 
@@ -339,7 +344,7 @@ const PlaygroundWrapper: React.FC<StaticContentProps> = ({ staticContent = true,
 
 	const handleRightClick = (e: any) => {
 		e.preventDefault();
-				onRightClick?.();
+		onRightClick?.();
 	}
 
 	useEffect(() => {
@@ -385,11 +390,11 @@ const UntimedReactionScreen: React.FC<ScreenProps> = ({ children, ...props }) =>
 	return (
 		<PlaygroundWrapper {...props}>
 			{children ||
-								<>
-									<TiWarningOutline size={'6rem'} />
-									<br />
-									<h1>Too early</h1>
-								</>}
+				<>
+					<TiWarningOutline size={'6rem'} />
+					<br />
+					<h1>Too early</h1>
+				</>}
 		</PlaygroundWrapper>
 	)
 }
@@ -398,12 +403,12 @@ const CorrectReactionScreen: React.FC<CorrectReactionScreenProps> = ({ result, c
 	return (
 		<PlaygroundWrapper {...props}>
 			{children ||
-								<>
-									<IoIosTimer size={'6rem'} />
-									<br />
-									<h1 className='font-weight-bold'>{result}ms</h1>
-									<p>Click to keep going</p>
-								</>}
+				<>
+					<IoIosTimer size={'6rem'} />
+					<br />
+					<h1 className='font-weight-bold'>{result}ms</h1>
+					<p>Click to keep going</p>
+				</>}
 		</PlaygroundWrapper>
 	)
 }
@@ -412,11 +417,11 @@ const WrongReactionScreen: React.FC<ScreenProps> = ({ children, ...props }) => {
 	return (
 		<PlaygroundWrapper {...props}>
 			{children ||
-								<>
-									<GiSplitCross size={'6rem'} />
-									<br />
-									<h1>Wrong answer</h1>
-								</>}
+				<>
+					<GiSplitCross size={'6rem'} />
+					<br />
+					<h1>Wrong answer</h1>
+				</>}
 		</PlaygroundWrapper>
 	)
 }
@@ -456,10 +461,10 @@ const StartScreen: React.FC<ScreenProps> = ({ children, ...props }) => {
 }
 
 interface BottomStatsProps {
-		tryNo: number;
-		maxTries: number;
-		tries: number[];
-		wrongAnswers?: number;
+	tryNo: number;
+	maxTries: number;
+	tries: number[];
+	wrongAnswers?: number;
 }
 
 const BottomStats: React.FC<BottomStatsProps> = ({ tryNo, maxTries, tries, wrongAnswers }) => {
@@ -483,7 +488,7 @@ const BottomStats: React.FC<BottomStatsProps> = ({ tryNo, maxTries, tries, wrong
 				</span>
 			</p>
 			<p className='col-4 col-sm-12 text-transparent'>
-				<span className='display-from-sm'>{scoresRowString}</span>
+				<span className='display-from-sm justify-content-center'>{scoresRowString}</span>
 				<span className='display-to-sm flex-column'>{scoresColumnString}</span>
 			</p>
 		</div>
@@ -491,15 +496,15 @@ const BottomStats: React.FC<BottomStatsProps> = ({ tryNo, maxTries, tries, wrong
 }
 
 interface Status {
-		active: boolean;
-		tryDone: boolean;
-		finished: boolean;
-		displayStimulus: boolean;
-		untimed: boolean;
-		failed: boolean;
-		wrongAnswers: number;
-		tryNo: number;
-		tries: number[];
+	active: boolean;
+	tryDone: boolean;
+	finished: boolean;
+	displayStimulus: boolean;
+	untimed: boolean;
+	failed: boolean;
+	wrongAnswers: number;
+	tryNo: number;
+	tries: number[];
 }
 
 const initStatus = () => {

@@ -10,15 +10,27 @@ const Header: React.FC = () => {
 
 	const deviceSizeBreakpoint = 'lg'
 
-	const [user, setState] = useStateWithStorage('user');
+	const [user, setUser] = useStateWithStorage('user');
+	const [screenWidth, setScreenWidth] = useState(window.innerWidth)
+	const history = useHistory();
 
 	const signout = () => {
-		setState(initGuestUser());
-		window.location.pathname = '/';
+		setUser(initGuestUser());
+		history.push('/');
 	}
 
+	const handleResize = () => {
+		const { innerWidth: width } = window;
+		setScreenWidth(width);
+	}
+
+	useEffect(() => {
+		window.addEventListener('resize', handleResize);
+		return () => window.removeEventListener('resize', handleResize);
+	}, [])
+
 	return (
-		<div className='header shadow'>
+		<div style={{width: screenWidth}} className='header shadow'>
 			<div className='container headerContent'>
 				<div className={`display-from-${deviceSizeBreakpoint}`}>
 					<div className='d-flex flex-row justify-content-center'>
@@ -71,7 +83,6 @@ const Header: React.FC = () => {
 			</div>
 		</div>
 	)
-
 }
 
 interface NavButtonProps {

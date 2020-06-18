@@ -83,6 +83,8 @@ const ExportSingleExperiment: React.FC = () => {
 			a.click();
 			a.remove();
 
+		} else if (status === 404) {
+			toast.error('Experiment with selected ID not found');
 		} else {
 			toast.error(data);
 		}

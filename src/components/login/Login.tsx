@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import { GoogleLogin } from 'react-google-login';
-import { useHistory, Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login } from '../../services';
 import { validateInput } from '../../utils';
@@ -12,14 +12,15 @@ import './login.scss';
 
 export const Login: React.FC = () => {
 
+	const history = useHistory();
+
 	const [user, setUser] = useStateWithStorage<User>('user');
+	const [loading, setLoading] = useState(false)
 
 	const [userData, setUserData] = useState({
 		username: '',
 		password: '',
 	});
-
-	const history = useHistory();
 
 	useEffect(() => {
 		if (user.token) {
@@ -35,39 +36,45 @@ export const Login: React.FC = () => {
 	}
 
 	const submit = async () => {
+		setLoading(true);
 		const [data, status] = await login({ username: userData.username, password: userData.password });
 		if (data && status === 200) {
 			setUser(data as User);
+			setLoading(false);
 			window.location.pathname = '/stats';
 		} else if (status === 404) {
 			toast.error('User with given credentials not found');
 		} else {
 			toast.error(data)
 		}
+		setLoading(false);
 	}
 
 	return (
-		<div className='row d-flex justify-content-center'>
-			<div className='col col-sm-8 col-md-6'>
-				<div className='text-center'>
-					<h1>Login</h1>
-					<h2>Don&apos;t have an account? <Link to={'/signup'}>Sign up</Link></h2>
-				</div>
-				<br />
-				<LoginForm onInputChange={handleChange} onSubmit={submit} />
-				{/* <GoogleLoginBtn />
+		<div className='page-min-height'>
+			<div className='row d-flex justify-content-center mb-5 pt-3'>
+				<div className='col col-sm-8 col-md-6'>
+					<div className='text-center'>
+						<h1>Login</h1>
+						<h2>Don&apos;t have an account? <Link to={'/signup'}>Sign up</Link></h2>
+					</div>
+					<br />
+					<LoginForm onInputChange={handleChange} onSubmit={submit} loading={loading}/>
+					{/* <GoogleLoginBtn />
                 <FBLoginBtn /> */}
+				</div>
 			</div>
 		</div>
 	)
 }
 
 interface LoginFormProps {
-    onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-    onSubmit: () => void;
+	onInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	onSubmit: () => void;
+	loading: boolean;
 }
 
-export const LoginForm: React.FC<LoginFormProps> = ({ onInputChange, onSubmit }) => (
+export const LoginForm: React.FC<LoginFormProps> = ({ onInputChange, onSubmit, loading }) => (
 	<Form onSubmit={onSubmit}>
 		<div className="form-group">
 			<label htmlFor="username">Username:</label>
@@ -81,7 +88,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onInputChange, onSubmit })
 				required
 			/>
 			<div className="invalid-feedback">
-                Please enter your username.
+				Please enter your username.
 			</div>
 		</div>
 		<div className="form-group">
@@ -98,11 +105,11 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onInputChange, onSubmit })
 				minLength={8}
 			/>
 			<div className="invalid-feedback">
-                Please enter a valid 8-character password.
+				Please enter a valid 8-character password.
 			</div>
 		</div>
 
-		<button type='submit' className="btn btn-primary float-right">Login</button>
+		<button type='submit' className="btn btn-primary float-right" disabled={loading}>Login</button>
 	</Form>
 )
 

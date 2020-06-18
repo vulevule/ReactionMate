@@ -1,44 +1,80 @@
+::-webkit-scrollbar {
+	width: 5px;
+	height: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+	background: transparent; 
+	border-radius: 10px;
+	margin: 5px
+}
+
+::-webkit-scrollbar-track-piece {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+	background: #888; 
+	border-radius: 10px;
+	margin: 10px
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+	background: #555; 
+}
+
 .headerButton {
-    cursor: pointer;
-    padding: 1rem;
-    text-transform: uppercase;
-    &:hover {
-        background: #f2f2f2;;
-    }
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	cursor: pointer;
+	padding: 1rem;
+	text-transform: uppercase;
+	&:hover {
+		background: #f2f2f2;;
+	}
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .header {
-    @media (max-width: 350px) {
+	@media (max-width: 350px) {
 		font-size: 0.8rem !important;
-    }
-    
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    width: 100%;
-    z-index: 1;
-    background-color: white;
+	}
+	
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	z-index: 1;
+	background-color: white;
 }
 
 .headerContent {
-    display: flex;
-    flex-flow: row;
-    justify-content: space-between;
+	display: flex;
+	flex-flow: row;
+	justify-content: space-between;
 }
 
 .iconLink {
-    color: white;
+	color: white;
 }
 
 .active {
-    background: rgba($color: #333, $alpha: 0.2);
+	background: rgba($color: #333, $alpha: 0.2);
 }
 
 .content {
-    margin-top: 4rem;
-    min-height: 100vh;
+	margin-top: 4rem;
+	// min-height: 100vh;
+}
+
+.page-relative {
+	position: relative;
+}
+
+.footer {
+	padding: 3rem;
 }

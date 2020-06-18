@@ -1,7 +1,8 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Switch, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import './app.scss';
 import { AdminPage } from './components/admin/AdminPage';
 import { ChoiceRT } from './components/dashboard/choice/ChoiceRT';
@@ -20,6 +21,22 @@ import { initConfig } from './utils';
 toast.configure()
 
 function App() {
+
+	const routes = [
+		{ path: '/dashboard', Component: Dashboard },
+		{ path: '/stats', Component: Stats },
+		{ path: '/login', Component: Login },
+		{ path: '/signup', Component: Signup },
+		{ path: '/simple', Component: SimpleRT },
+		{ path: '/recognition', Component: RecognitionRT },
+		{ path: '/choice', Component: ChoiceRT },
+		{ path: '/discrimination', Component: DiscriminationRT },
+		{ path: '/', Component: Dashboard },
+	]
+
+	const location = useLocation();
+	const currentKey = location.pathname.split('/')[1] || '/'
+
 	initConfig();
 	return (
 		<div className='container'>
@@ -33,38 +50,29 @@ function App() {
 				</Route>
 				<Route path='/'>
 					<Header />
-					<div className='pt-3 content'>
-						<Switch>
-							<Route path='/dashboard'>
-								<Dashboard />
-							</Route>
-							<Route path='/stats'>
-								<Stats />
-							</Route>
-							<Route path='/login'>
-								<Login />
-							</Route>
-							<Route path='/signup'>
-								<Signup />
-							</Route>
-							<Route path='/simple'>
-								<SimpleRT />
-							</Route>
-							<Route path='/recognition'>
-								<RecognitionRT />
-							</Route>
-							<Route path='/choice'>
-								<ChoiceRT />
-							</Route>
-							<Route path='/discrimination'>
-								<DiscriminationRT />
-							</Route>
-							<Route path='/'>
-								<Dashboard />
-							</Route>
-						</Switch>
+					<div className='pt-2 content'>
+						<TransitionGroup className='page-relative'>
+							<CSSTransition
+								appear
+								key={currentKey}
+								timeout={300}
+								classNames='slide-forward'
+								unmountOnExit
+							>
+								<div className="slide">
+									<Switch location={location}>
+										{routes.map(({ path, Component }) => (
+											<Route key={path} path={path}>
+												<Component />
+											</Route>
+										))}
+									</Switch>
+									<Footer />
+								</div>
+							</CSSTransition>
+						</TransitionGroup>
 					</div>
-					<Footer />
+					{/* Alternative place for footer */}
 				</Route>
 			</Switch>
 		</div>

@@ -1,6 +1,6 @@
 
-import React from 'react'
-import { Playground } from '../Playground'
+import React from 'react';
+import { Playground } from '../Playground';
 import { SimpleStartScreen, SimpleStimulusScreen } from './Components';
 
 export const SimpleRT: React.FC = () => {
@@ -16,6 +16,6 @@ export const SimpleRT: React.FC = () => {
 			<div className='pt-3'>
 
 			</div>
-		</div>
+		</div>		
 	)
 }
