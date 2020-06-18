@@ -13,7 +13,7 @@ import { Experiment, TestConfiguration } from './../../model/Experiment';
 import { PageSpinner } from './../utilities/Loaders';
 import { ExpChoice } from './ExpChoice';
 import { ExpDiscrimination } from './ExpDiscrimination';
-import './ExperimentPage.scss';
+import './experimentPage.scss';
 import { ExpRecognition } from './ExpRecognition';
 import { ExpSimple } from './ExpSimple';
 
@@ -94,9 +94,9 @@ export const ExperimentPage: React.FC = () => {
 	return (
 		<div className="experiment">
 			{!experiment && !errorMessage &&
-								<div className="vh-100 flex-center-all">
-									<PageSpinner />
-								</div>
+				<div className="vh-100 flex-center-all">
+					<PageSpinner />
+				</div>
 			}
 			{experiment && <ExperimentInstance experiment={experiment} />}
 			{errorMessage}
@@ -105,11 +105,11 @@ export const ExperimentPage: React.FC = () => {
 }
 
 interface ExperimentProp {
-		experiment: Experiment;
+	experiment: Experiment;
 }
 
 interface RequiredDataFormProps extends ExperimentProp {
-		onSubmit: (...args: any[]) => void;
+	onSubmit: (...args: any[]) => void;
 }
 
 const ExperimentInstance: React.FC<ExperimentProp> = ({ experiment }: ExperimentProp) => {
@@ -130,33 +130,32 @@ const ExperimentInstance: React.FC<ExperimentProp> = ({ experiment }: Experiment
 	}
 
 	return (
-		<TransitionGroup className='experiment' appear>
-			{currentStage === 0 &&
-								<CSSTransition appear key={0} timeout={500} classNames='item'>
-									<FirstSlide testsConfig={testsConfig} experiment={experiment} onSubmit={handleRequiredDataSubmit} />
-								</CSSTransition>
-			}
+		<TransitionGroup className='min-vh-100'>
+			<CSSTransition key={currentStage} timeout={500} classNames='item'>
+				<div className='slide'>
+					{currentStage === 0 &&
+						<FirstSlide testsConfig={testsConfig} experiment={experiment} onSubmit={handleRequiredDataSubmit} />
+					}
 
-			{testsConfig.map((test, i) => {
-				if (currentStage === i + 1) return (
-					<CSSTransition key={i + 1} timeout={500} classNames='item'>
-						{testConfigMapper(test, i === testsConfig.length - 1, onSaveTestScore)}
-					</CSSTransition>
-				)
-			}
-			)}
+					{testsConfig.map((test, i) => {
+						if (currentStage === i + 1) return (
+							testConfigMapper(test, i === testsConfig.length - 1, onSaveTestScore)
+						)
+					}
+					)}
 
-			{currentStage === testsConfig.length + 1 &&
-								<CSSTransition key={testsConfig.length + 1} timeout={500} classNames='item'>
-									<Results scores={scores} requiredData={requiredData} />
-								</CSSTransition>
-			}
+					{currentStage === testsConfig.length + 1 &&
+						
+						<Results scores={scores} requiredData={requiredData} />
+					}
+				</div>
+			</CSSTransition>
 		</TransitionGroup>
 	)
 }
 
 interface FirstSlideProps extends RequiredDataFormProps {
-		testsConfig: TestConfiguration[];
+	testsConfig: TestConfiguration[];
 }
 
 const FirstSlide: React.FC<FirstSlideProps> = ({ testsConfig, ...props }) => {
@@ -165,18 +164,22 @@ const FirstSlide: React.FC<FirstSlideProps> = ({ testsConfig, ...props }) => {
 			<div className='hero-auto pt-4 pb-4'>
 				<h1 className='letterSpaced'>Welcome to <br className='display-to-sm' />Reacti<MdTimelapse size={'1.9rem'} />nMate</h1>
 				{testsConfig.length > 1 ?
-					<p>
-						You will be presented with <b>{testsConfig.length}</b> different tests.
-						Complete each of them and review your results.
+					<p className='text-sm'>
+						You will be presented with <b>{testsConfig.length}</b> different tests
+						<br/>
+						Complete each of them and review your results
 					</p>
 					:
-					<p>
-						You will be presented with one <b>{testsConfig[0].type}</b> type test.
-						Complete it and review your result.
+					<p className='text-sm'>
+						You will be presented with one <b>{testsConfig[0].type}</b> type test
+						<br/>
+						Complete it and review your result
 					</p>
 				}
 			</div>
-			<RequiredDataForm {...props} />
+			<div className='container'>
+				<RequiredDataForm {...props} />
+			</div>
 		</div>
 	)
 }
@@ -186,13 +189,13 @@ const RequiredDataForm: React.FC<RequiredDataFormProps> = ({ experiment, onSubmi
 
 	const initRequiredData = () => {
 		const data: Record<string, any> = {};
-				requiredDataConfig?.length && requiredDataConfig.forEach(input => {
+		requiredDataConfig?.length && requiredDataConfig.forEach(input => {
 			if (input.type === 'radio' && input.options) {
 				data[input.tableLabel] = input.options[0].value;
 			}
 		})
 
-				return data;
+		return data;
 	}
 
 	const [requiredData, setRequiredData] = useState(initRequiredData);
@@ -209,9 +212,9 @@ const RequiredDataForm: React.FC<RequiredDataFormProps> = ({ experiment, onSubmi
 
 	return (
 		<div className='pt-3 row flex-center-all'>
-			<div className='col col-sm-8 col-md-6'>
+			<div className='col col-lg-6 col-md-8'>
 				<div className='text-center'>
-					<h2>- Please provide us with next information before starting -</h2>
+					<h2>Please provide us with next information<br className='display-to-sm'/> before starting</h2>
 				</div>
 				<br />
 				<Form onSubmit={() => onSubmit(requiredData)}>
@@ -225,7 +228,7 @@ const RequiredDataForm: React.FC<RequiredDataFormProps> = ({ experiment, onSubmi
 							required
 						/>
 						<div className="invalid-feedback">
-														Please enter your first name.
+							Please enter your first name.
 						</div>
 					</div>
 					<div className="form-group">
@@ -238,7 +241,7 @@ const RequiredDataForm: React.FC<RequiredDataFormProps> = ({ experiment, onSubmi
 							required
 						/>
 						<div className="invalid-feedback">
-														Please enter your last name.
+							Please enter your last name.
 						</div>
 					</div>
 					<div className="form-group">
@@ -252,7 +255,7 @@ const RequiredDataForm: React.FC<RequiredDataFormProps> = ({ experiment, onSubmi
 							required
 						/>
 						<div className="invalid-feedback">
-														Please enter a valid email address.
+							Please enter a valid email address.
 						</div>
 					</div>
 					<CustomDataForm
@@ -268,12 +271,11 @@ const RequiredDataForm: React.FC<RequiredDataFormProps> = ({ experiment, onSubmi
 }
 
 interface ResultsProps {
-		scores: SpecificScore[];
-		requiredData: Record<string, any>;
+	scores: SpecificScore[];
+	requiredData: Record<string, any>;
 }
 
 const Results: React.FC<ResultsProps> = ({ scores, requiredData }: ResultsProps) => {
-
 	const { id } = useParams();
 	const [sending, setSending] = useState(false);
 	const [showModal, setShowModal] = useState(false)
@@ -301,10 +303,11 @@ const Results: React.FC<ResultsProps> = ({ scores, requiredData }: ResultsProps)
 	const takeAnother = () => window.location.reload();
 
 	return (
-		<div className="resultsSlide">
+		<div className="container resultsSlide">
 			<ActivityFeedCard
 				title='Results'
 				scores={scores}
+				showType
 				showTries
 				showDate={false}
 				showAverage
@@ -316,13 +319,13 @@ const Results: React.FC<ResultsProps> = ({ scores, requiredData }: ResultsProps)
 				onClick={submitResults}
 				disabled={sending}
 			>
-								Submit results
+				Submit results
 			</button>
 
 			{sending &&
-								<div className="spinner-border" role="status">
-									<span className="sr-only">Loading...</span>
-								</div>
+				<div className="spinner-border" role="status">
+					<span className="sr-only">Loading...</span>
+				</div>
 			}
 
 			<Modal show={showModal} centered keyboard={false} backdrop='static'>

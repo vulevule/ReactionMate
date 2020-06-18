@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Playground, ExperimentMode } from '../dashboard/Playground';
 import { SimpleStartScreen, SimpleStimulusScreen } from '../dashboard/simple/Components';

@@ -4,7 +4,7 @@ import { AiFillGithub, AiFillLinkedin } from 'react-icons/ai';
 const Footer: React.FC = () => {
 
 	return (
-		<div className='hero-auto pt-5 pb-5'>
+		<div className='hero-auto footer'>
 			<h6>Made with <span role='img' aria-label='heart'>❤️</span> in Novi Sad, Serbia</h6>
 			<div>
 				<a href='https://github.com/vulevule' className='iconLink'><AiFillGithub size={'2rem'} /></a>

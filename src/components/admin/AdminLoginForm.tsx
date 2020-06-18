@@ -10,6 +10,7 @@ import { MdTimelapse } from 'react-icons/md';
 export const AdminLoginForm: React.FC = () => {
 
 	const [, setAdmin] = useStateWithStorage<Admin>('admin', false);
+	const [loading, setLoading] = useState(false)
 
 	const [userData, setUserData] = useState({
 		username: '',
@@ -24,15 +25,18 @@ export const AdminLoginForm: React.FC = () => {
 	}
 
 	const submit = async () => {
+		setLoading(true);
 		const [data, status] = await login({ username: userData.username, password: userData.password }, true);
 		if (data && status === 200) {
 			setAdmin(data as Admin);
+			setLoading(false)
 			window.location.reload();
 		} else if (status === 404) {
 			toast.error('User with given credentials not found');
 		} else {
 			toast.error(data)
 		}
+		setLoading(false);
 	}
 
 	return (
@@ -47,7 +51,7 @@ export const AdminLoginForm: React.FC = () => {
 			<br />
 			<div className='row flex-center-all'>
 				<div className='col col-sm-8 col-md-6'>
-					<LoginForm onInputChange={handleChange} onSubmit={submit} />
+					<LoginForm onInputChange={handleChange} onSubmit={submit} loading={loading}/>
 				</div>
 			</div>
 
